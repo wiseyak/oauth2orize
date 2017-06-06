@@ -76,6 +76,7 @@ module.exports = function(options, issue) {
 
   return async function password(ctx) {
     const req = ctx.request;
+    const state = ctx.state;
 
     if (!req.body) { throw new Error('OAuth2orize requires body parsing. Did you forget app.use(express.bodyParser())?'); }
 
@@ -104,7 +105,9 @@ module.exports = function(options, issue) {
 
     var arity = issue.length;
     var result;
-    if (arity == 5) {
+    if (arity == 6) {
+      result = await issue(client, username, passwd, scope, req.body, state);
+    } else if (arity == 5) {
       result = await issue(client, username, passwd, scope, req.body);
     } else if (arity == 4) {
       result = await issue(client, username, passwd, scope);
